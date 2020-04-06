@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <title>COVID-19</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Required dependencies -->
+  <script>require('chart.js');</script>
+  <script>let $ = require('jquery');</script>
+  <script>require('popper.js');</script>
+  <script>require('bootstrap');</script>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="bg-dark">
+  <nav id="control" class="navbar fixed-top justify-content-end p-0">
+    <a class="controles" href="#" role="button"><svg class="icon" viewBox="0 0 24 24">
+        <path class="cls-1" d="M6,11H18v2H6Z" />
+      </svg></a>
+    <a class="controles" href="#" role="button"><svg class="icon" viewBox="0 0 24 24">
+        <path class="cls-1" d="M12,8,6,14l1.41,1.41L12,10.83l4.59,4.58L18,14Z" />
+      </svg></a>
+    <a class="controles bg-danger" href="#" role="button"><svg class="icon" viewBox="0 0 24 24">
+        <path class="cls-1"
+          d="M19,6.41,17.59,5,12,10.59,6.41,5,5,6.41,10.59,12,5,17.59,6.41,19,12,13.41,17.59,19,19,17.59,13.41,12Z" />
+      </svg></a>
+  </nav>
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-xl-10">
+        <h2 class="text-light text-center font-weight-normal pt-1">Casos de COVID-19</h2>
+        <div id="chartContent" class="mb-3">
+          <canvas class="mb-3" id="myChart"></canvas>
+        </div>
+        <form action="">
+          <div class="row">
+            <div class="col form-group pr-0">
+              <select class="form-control custom-select bg-dark text-light" name="" id="select">
+                <option selected value="todos">Todas las provincias</option>
+                <option value="AN">Andalucía</option>
+                <option value="AR">Aragón</option>
+                <option value="AS">Principado de Asturias</option>
+                <option value="IB">Islas Baleares</option>
+                <option value="CN">Canarias</option>
+                <option value="CB">Cantabria</option>
+                <option value="CM">Castilla La Mancha</option>
+                <option value="CL">Castilla y León</option>
+                <option value="CT">Cataluña</option>
+                <option value="CE">Ceuta</option>
+                <option value="VC">Comunidad Valenciana</option>
+                <option value="EX">Extremadura</option>
+                <option value="GA">Galicia</option>
+                <option value="MD">Comunidad de Madrid</option>
+                <option value="ME">Melilla</option>
+                <option value="MC">Región de Murcia</option>
+                <option value="NC">Comunidad Foral de Navarra</option>
+                <option value="PV">País Vasco</option>
+                <option value="RI">La Rioja</option>
+              </select>
+            </div>
+            <div class="col form-group">
+              <select class="form-control custom-select bg-dark text-light" name="" id="fechas"></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <select class="form-control custom-select bg-dark text-light" name="" id="grafico">
+              <option value="total">Casos totales</option>
+              <option value="diario">Casos diarios</option>
+            </select>
+          </div>
+        </form>
+        <div class="table-responsive-md">
+          <table id="table" class="table table-striped table-dark w-100"></table>
+          <table id="table2" class="table table-striped table-dark w-100"></table>
+        </div>
+      </div>
+    </div>
+    <div class="row p-5">
+      <div class="col text-center">
+        <a id="fuente" href="#">Fuente</a>
+      </div>
+    </div>
+
+  </div>
+  <!-- Optional JavaScript -->
+  <script type="text/javascript" src="js/jsFunctions.js"></script>
+  <script src="js/botones.js"></script>
+</body>
+
+</html>
