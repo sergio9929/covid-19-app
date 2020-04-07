@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { ipcRenderer } = require("electron");
-var csvPath = __dirname+"/../serie_historica_acumulados.csv"; //escribe el nombre del archivo
+var csvPath = __dirname + "/../serie_historica_acumulados.csv"; //escribe el nombre del archivo
 var opcion = "todos";
 var maxdate = "20/02/2020";
 var tipografico = "total";
@@ -9,7 +9,7 @@ if (navigator.onLine) {
   ipcRenderer.send("download", {
     url: "https://covid19.isciii.es/resources/serie_historica_acumulados.csv",
     properties: {
-      directory: __dirname+"/../",
+      directory: __dirname + "/../",
       filename: "serie_historica_acumulados.csv",
       errorTitle: "Error de descarga",
       errorMessage: "No se ha podido actualizar"
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
   document.getElementById("grafico").addEventListener("change", cambiargrafico);
 })
 
-function grafico(fecha, casos, fallecidos, recuperados) {
+function grafico(fecha, casos, fallecidos, recuperados, activos) {
   Chart.defaults.global.defaultFontColor = 'white';
   Chart.defaults.global.defaultFontFamily = '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"';
   var ctx = document.getElementById('myChart').getContext('2d');
@@ -100,8 +100,8 @@ function grafico(fecha, casos, fallecidos, recuperados) {
         ],
         borderWidth: 1
       }, {
-        label: 'casos',
-        data: casos,
+        label: 'activos',
+        data: activos,
         backgroundColor: [
           '#d7385e'
         ],
@@ -109,6 +109,13 @@ function grafico(fecha, casos, fallecidos, recuperados) {
           '#d7385e',
         ],
         borderWidth: 1
+      }, {
+        label: 'casos',
+        data: casos,
+        borderColor: [
+          '#d7385e',
+        ],
+        borderWidth: 2
       },]
     },
     options: {
@@ -227,29 +234,15 @@ function leerJSON() {
       var a = csvObject(data);
       var displaytotal = "";
       var fecha = []
-      var casos = []
-      var fallecidos = []
-      var recuperados = []
-      var casosdiarios = [];
-      var hospitalizados = [];
-      var uci = [];
-      var fallecidosdiarios = [];
-      var recuperadosdiarios = [];
-      var hospitalizadosdiarios = [];
-      var ucidiarios = [];
-      var sumacasos = 0;
-      var sumafallecidos = 0;
-      var sumarecuperados = 0;
-      var sumahospitalizados = 0;
-      var sumauci = 0;
+      var casos = { cantidad: [], suma: 0, diarios: [] }
+      var fallecidos = { cantidad: [], suma: 0, diarios: [] }
+      var recuperados = { cantidad: [], suma: 0, diarios: [] }
+      var hospitalizados = { cantidad: [], suma: 0, diarios: [] }
+      var uci = { cantidad: [], suma: 0, diarios: [] }
+      var activos = { cantidad: [], suma: 0, diarios: [] }
 
       //fill table head
-      var head = "<tr>";
-      for (let j = 0; j < Object.keys(a[0]).length; j++) {
-        var nombre = Object.keys(a[0])[j];
-        head += "<th>" + nombre + "</th>";
-      }
-      head += "</tr>";
+      head = "<tr><th>Provincias</th><th>Fechas/th><th>Casos</th><th>Activos</th><th>Hospitalizados</th><th>UCI</th><th>Fallecidos</th><th>Recuperados</th></tr>";
 
       //fill table body
       var body = "";
@@ -262,12 +255,16 @@ function leerJSON() {
           body += "<tr>";
           if (a[i].Fecha == maxdate) {
             if (opcion == a[i]["CCAA Codigo ISO"]) {
-              for (let j = 0; j < Object.keys(a[i]).length; j++) {
+              var q = a[i].Casos - a[i].Fallecidos - a[i].Recuperados;
+              body += "<td>" + a[i]["CCAA Codigo ISO"] + "</td><td>" + a[i].Fecha + "</td><td>" + a[i].Casos + "</td><td>" + q + "</td>";
+              for (let j = 3; j < Object.keys(a[i]).length; j++) {
                 var nomficha = Object.keys(a[i])[j];
                 body += "<td>" + a[i][nomficha] + "</td>";
               }
             } else if (opcion == "todos") {
-              for (let j = 0; j < Object.keys(a[i]).length; j++) {
+              var q = a[i].Casos - a[i].Fallecidos - a[i].Recuperados;
+              body += "<td>" + a[i]["CCAA Codigo ISO"] + "</td><td>" + a[i].Fecha + "</td><td>" + a[i].Casos + "</td><td>" + q + "</td>";
+              for (let j = 3; j < Object.keys(a[i]).length; j++) {
                 var nomficha = Object.keys(a[i])[j];
                 body += "<td>" + a[i][nomficha] + "</td>";
               }
@@ -277,91 +274,101 @@ function leerJSON() {
         } else {
           if (opcion == "todos") {
             provincias = document.getElementById("select").options;
-            if (a[i].Fecha == maxdate) {
+            if (a[i].Fecha == maxdate && i > 18) {
               let q1 = a[i].Casos - a[i - 19].Casos;
-              let q2 = a[i].Hospitalizados - a[i - 19].Hospitalizados;
-              let q3 = a[i].UCI - a[i - 19].UCI;
-              let q4 = a[i].Fallecidos - a[i - 19].Fallecidos;
-              let q5 = a[i].Recuperados - a[i - 19].Recuperados;
-              body += "<tr><td>" + a[i]["CCAA Codigo ISO"] + "</td><td>" + a[i].Fecha + "</td><td>" + q1 + "</td><td>" + q2 + "</td><td>" + q3 + "</td><td>" + q4 + "</td><td>" + q5 + "</td></tr>";
+              let q3 = a[i].Hospitalizados - a[i - 19].Hospitalizados;
+              let q4 = a[i].UCI - a[i - 19].UCI;
+              let q5 = a[i].Fallecidos - a[i - 19].Fallecidos;
+              let q6 = a[i].Recuperados - a[i - 19].Recuperados;
+              let q2 = q1 - q5 - q6;
+              body += "<tr><td>" + a[i]["CCAA Codigo ISO"] + "</td><td>" + a[i].Fecha + "</td><td>" + q1 + "</td><td>" + q2 + "</td><td>" + q3 + "</td><td>" + q4 + "</td><td>" + q5 + "</td><td>" + q6 + "</td></tr>";
             }
           }
         }
         if (opcion == a[i]["CCAA Codigo ISO"]) {
           fecha.push(a[i].Fecha);
-          casos.push(a[i].Casos);
-          fallecidos.push(a[i].Fallecidos);
-          recuperados.push(a[i].Recuperados);
-          hospitalizados.push(a[i].Hospitalizados);
-          uci.push(a[i].UCI);
+          casos.cantidad.push(a[i].Casos);
+          fallecidos.cantidad.push(a[i].Fallecidos);
+          recuperados.cantidad.push(a[i].Recuperados);
+          hospitalizados.cantidad.push(a[i].Hospitalizados);
+          uci.cantidad.push(a[i].UCI);
+          activos.cantidad.push(a[i].Casos - a[i].Fallecidos - a[i].Recuperados);
         } else if (opcion == "todos") {
 
           //Eliminar NaN
           if (a[i].Casos > 0) {
-            sumacasos += parseInt(a[i].Casos);
+            casos.suma += parseInt(a[i].Casos);
           }
           if (a[i].Fallecidos > 0) {
-            sumafallecidos += parseInt(a[i].Fallecidos);
+            fallecidos.suma += parseInt(a[i].Fallecidos);
           }
           if (a[i].Recuperados > 0) {
-            sumarecuperados += parseInt(a[i].Recuperados);
+            recuperados.suma += parseInt(a[i].Recuperados);
           }
           if (a[i].Hospitalizados > 0) {
-            sumahospitalizados += parseInt(a[i].Hospitalizados);
+            hospitalizados.suma += parseInt(a[i].Hospitalizados);
           }
           if (a[i].UCI > 0) {
-            sumauci += parseInt(a[i].UCI);
+            uci.suma += parseInt(a[i].UCI);
           }
+          if (a[i].Casos - a[i].Fallecidos - a[i].Recuperados > 0) {
+            activos.suma += parseInt(a[i].Casos - a[i].Fallecidos - a[i].Recuperados);
+          }
+
 
           //suma
           if (a[i]["CCAA Codigo ISO"] == "La Rioja") {
             fecha.push(a[i].Fecha);
-            casos.push(sumacasos);
-            fallecidos.push(sumafallecidos);
-            recuperados.push(sumarecuperados);
-            hospitalizados.push(sumahospitalizados);
-            uci.push(sumauci);
+            casos.cantidad.push(casos.suma);
+            fallecidos.cantidad.push(fallecidos.suma);
+            recuperados.cantidad.push(recuperados.suma);
+            hospitalizados.cantidad.push(hospitalizados.suma);
+            uci.cantidad.push(uci.suma);
+            activos.cantidad.push(activos.suma);
 
-            if (maxdate == a[i].Fecha && sumacasos > 0 && tipografico == "total") {
-              displaytotal = "<tr><th>TOTAL</th><td>" + maxdate + "</td><td>" + sumacasos + "</td><td>" + sumahospitalizados + "</td><td>" + sumauci + "</td><td>" + sumafallecidos + "</td><td>" + sumarecuperados + "</td></tr>";
+            if (maxdate == a[i].Fecha && casos.suma > 0 && tipografico == "total") {
+              displaytotal = "<tr><th>TOTAL</th><td>" + maxdate + "</td><td>" + casos.suma + "</td><td>" + activos.suma + "</td><td>" + hospitalizados.suma + "</td><td>" + uci.suma + "</td><td>" + fallecidos.suma + "</td><td>" + recuperados.suma + "</td></tr>";
             }
 
-            sumacasos = 0;
-            sumafallecidos = 0;
-            sumarecuperados = 0;
-            sumahospitalizados = 0;
-            sumauci = 0;
+            casos.suma = 0;
+            fallecidos.suma = 0;
+            recuperados.suma = 0;
+            hospitalizados.suma = 0;
+            uci.suma = 0;
+            activos.suma = 0;
           }
         }
       }
 
       if (tipografico == "diario") {
         for (let i = 0; i < fecha.length; i++) {
-          casosdiarios[i] = casos[i] - casos[i - 1];
-          recuperadosdiarios[i] = recuperados[i] - recuperados[i - 1];
-          fallecidosdiarios[i] = fallecidos[i] - fallecidos[i - 1];
-          hospitalizadosdiarios[i] = hospitalizados[i] - hospitalizados[i - 1];
-          ucidiarios[i] = uci[i] - uci[i - 1];
+          casos.diarios[i] = casos.cantidad[i] - casos.cantidad[i - 1];
+          recuperados.diarios[i] = recuperados.cantidad[i] - recuperados.cantidad[i - 1];
+          fallecidos.diarios[i] = fallecidos.cantidad[i] - fallecidos.cantidad[i - 1];
+          hospitalizados.diarios[i] = hospitalizados.cantidad[i] - hospitalizados.cantidad[i - 1];
+          uci.diarios[i] = uci.cantidad[i] - uci.cantidad[i - 1];
+          activos.diarios[i] = activos.cantidad[i] - activos.cantidad[i - 1];
           if (maxdate == fecha[i]) {
             if (opcion != "todos") {
-              body += "<tr><td>" + opcion + "</td><td>" + fecha[i] + "</td><td>" + casosdiarios[i] + "</td><td>" + hospitalizadosdiarios[i] + "</td><td>" + ucidiarios[i] + "</td><td>" + fallecidosdiarios[i] + "</td><td>" + recuperadosdiarios[i] + "</td></tr>";
+              body += "<tr><td>" + opcion + "</td><td>" + fecha[i] + "</td><td>" + casos.diarios[i] + "</td><td>" + activos.diarios[i] + "</td><td>" + hospitalizados.diarios[i] + "</td><td>" + uci.diarios[i] + "</td><td>" + fallecidos.diarios[i] + "</td><td>" + recuperados.diarios[i] + "</td></tr>";
             } else {
-              displaytotal = "<tr><th>TOTAL</th><td>" + fecha[i] + "</td><td>" + casosdiarios[i] + "</td><td>" + hospitalizadosdiarios[i] + "</td><td>" + ucidiarios[i] + "</td><td>" + fallecidosdiarios[i] + "</td><td>" + recuperadosdiarios[i] + "</td></tr>";
+              displaytotal = "<tr><th>TOTAL</th><td>" + fecha[i] + "</td><td>" + casos.diarios[i] + "</td><td>" + activos.diarios[i] + "</td><td>" + hospitalizados.diarios[i] + "</td><td>" + uci.diarios[i] + "</td><td>" + fallecidos.diarios[i] + "</td><td>" + recuperados.diarios[i] + "</td></tr>";
             }
           }
         }
 
-        casos = casosdiarios;
-        fallecidos = fallecidosdiarios;
-        recuperados = recuperadosdiarios;
-        hospitalizados = hospitalizadosdiarios;
-        uci = ucidiarios;
+        casos.cantidad = casos.diarios;
+        fallecidos.cantidad = fallecidos.diarios;
+        recuperados.cantidad = recuperados.diarios;
+        hospitalizados.cantidad = hospitalizados.diarios;
+        uci.cantidad = uci.diarios;
+        activos.cantidad = activos.diarios;
       }
 
       //display
       document.getElementById("chartContent").innerHTML = "<canvas class=\"mb-3\" id=\"myChart\"></canvas>";
-      document.getElementById("table").innerHTML = head + body + "<tr class=\"bg-dark\"><td colspan=\"7\"></td></tr>" + displaytotal;
-      grafico(fecha, casos, fallecidos, recuperados);
+      document.getElementById("table").innerHTML = head + body + "<tr class=\"bg-dark\"><td colspan=\"8\"></td></tr>" + displaytotal;
+      grafico(fecha, casos.cantidad, fallecidos.cantidad, recuperados.cantidad, activos.cantidad);
     }
   })
 }

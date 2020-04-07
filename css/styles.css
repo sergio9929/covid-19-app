@@ -26,6 +26,14 @@
     width: 100%;
 }
 
+/* table{
+    background-color: brown;
+}
+
+.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
+    background-color: red;
+ } */
+
 .icon {
     height: 20px;
     width: 40px;

@@ -18,7 +18,7 @@ function createWindow() {
     win.setMenu(null)
     win.loadURL("file://" + __dirname + "/index.html")
     win.on("closed", () => { win = null })
-    //win.webContents.openDevTools()
+    win.webContents.openDevTools()
     
     //download
     ipcMain.on("download", async (event, info) => {
