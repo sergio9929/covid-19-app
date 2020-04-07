@@ -9,13 +9,13 @@
     "bootstrap": "^4.4.1",
     "chart.js": "^2.9.3",
     "electron-dl": "^3.0.0",
-    "electron-updater": "^4.2.5"
+    "electron-updater": "^4.2.5",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.16.1"
   },
   "devDependencies": {
     "electron": "^8.2.0",
-    "electron-builder": "^22.4.1",
-    "jquery": "^3.4.1",
-    "popper.js": "^1.16.1"
+    "electron-builder": "^22.4.1"
   },
   "scripts": {
     "start": "electron main.js",
@@ -36,7 +36,8 @@
         }
       ],
       "target": [
-        "nsis"
+        "nsis",
+        "portable"
       ],
       "icon": "resources/icon.png"
     },

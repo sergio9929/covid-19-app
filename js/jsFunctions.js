@@ -1,23 +1,22 @@
 const fs = require("fs");
 const { ipcRenderer } = require("electron");
-var csvPath = __dirname + "/resources/serie_historica_acumulados.csv"; //escribe el nombre del archivo
+var csvPath = __dirname+"/../serie_historica_acumulados.csv"; //escribe el nombre del archivo
 var opcion = "todos";
 var maxdate = "20/02/2020";
 var tipografico = "total";
-console.log("Online: " + navigator.onLine)
 if (navigator.onLine) {
 
   ipcRenderer.send("download", {
     url: "https://covid19.isciii.es/resources/serie_historica_acumulados.csv",
     properties: {
-      directory: __dirname + "/resources",
+      directory: __dirname+"/../",
       filename: "serie_historica_acumulados.csv",
       errorTitle: "Error de descarga",
       errorMessage: "No se ha podido actualizar"
     }
   });
 } else {
-  fs.access(__dirname + "/resources/serie_historica_acumulados.csv", (err) => {
+  fs.access(csvPath, (err) => {
     if (err) {
       alert("Conectate a internet y reinicia la aplicación para descargar los datos");
     } else {
@@ -37,7 +36,7 @@ ipcRenderer.on("download complete", (event, file) => {
 
 ipcRenderer.on("download error", (event) => {
   console.log("hola")
-  fs.access(__dirname + "/resources/serie_historica_acumulados.csv", (err) => {
+  fs.access(csvPath, (err) => {
     if (err) {
       alert("Reinicia la aplicación");
     } else {
@@ -55,9 +54,9 @@ ipcRenderer.on("download progress", (event, progress) => {
 ipcRenderer.on("download cancel", (event, item) => {
   // item.cancel()
   console.log("cancelado")
-  fs.access(__dirname + "/resources/serie_historica_acumulados.csv", (err) => {
+  fs.access(csvPath, (err) => {
     if (err) {
-      alert("Conectate a internet y reinicia la aplicación para descargar los datos");
+      alert("Conectate a internet o reinicia la aplicación para descargar los datos");
     } else {
       console.log("sin internet pero carga");
       llenarfechas();
@@ -173,7 +172,7 @@ function llenarfechas() {
       alert(err)
     } else {
       var a = csvObject(data);
-      maxdate = a[a.length - 1].Fecha;
+      maxdate = a[a.length - 4].Fecha;
       for (let i = a.length - 1; i > 0; i--) {
         if (a[i]["CCAA Codigo ISO"] == "RI") {
           document.getElementById("fechas").innerHTML += "<option value=\"" + a[i].Fecha + "\">" + a[i].Fecha + "</option>;"
@@ -207,9 +206,7 @@ function csvObject(csv) {
         j = headers.length;
         var eliminar = true;
       } else {
-
-          obj[headers[j]] = currentline[j];
-        console.log(currentline[j]);
+        obj[headers[j]] = currentline[j];
       }
     }
 
@@ -217,7 +214,6 @@ function csvObject(csv) {
       result.push(obj);
     }
   }
-  console.log(result);
   return result; //JavaScript object
 
 }
