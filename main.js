@@ -6,10 +6,10 @@ let win
 function createWindow() {
     win = new BrowserWindow({
         backgroundColor: "#343a40",
-        width: 800,
-        height: 600,
+        width: 850,
+        height: 630,
         minWidth: 470,
-        minHeight: 350,
+        minHeight: 425,
         frame: false,
         webPreferences: {
             nodeIntegration: false,
@@ -19,7 +19,7 @@ function createWindow() {
     win.setMenu(null)
     win.loadURL("file://" + __dirname + "/index.html")
     win.on("closed", () => { win = null })
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
 
     //download
     ipcMain.on("download", async (event, info) => {
