@@ -1,61 +1,53 @@
+:root{
+    --dark1: #121517;
+    --dark2: #1B1E21;
+    --dark3: #23272B;
+    --dark4: #2F3439;
+    --red: #D7385E;
+    --blue: #28BDE5;
+    --yellow: #E5DA55;
+}
+
+*{
+    color: #CCCCCC;
+}
+
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
-    height: 5px;
+    height: 10px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-    background: var(--dark);
+    background: var(--dark3)!important;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #454d55;
-    border-right: 5px solid var(--dark);
+    background: var(--dark4);
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--gray);
-}
-
-#chartContent{
-    max-height: 70vh; 
-    height: 50vw; 
-    width: 100%;
-}
-
-/* table{
-    background-color: brown;
-}
-
-.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr:nth-child(2n+1) > th {
-    background-color: red;
- } */
-
-.icon {
-    height: 20px;
-    width: 40px;
-    padding: 2px;
-    stroke: #ced4da;
-    stroke-width: 1px;
-    fill: #ced4da;
-}
-
-.icon:hover, .icon:active {
-    fill: white;
-    stroke: white;
-    padding: 2px;
+    background: var(--dark);
 }
 
 body {
     overflow-y: hidden;
 }
 
+.container-fluid {
+    position: absolute;
+    top: 20px;
+    bottom: 0px;
+    overflow-y: scroll;
+    background-color: var(--dark2)!important;
+}
+
 .navbar {
     height: 20px;
-    background-color: #272b30;
+    background-color: var(--dark1)!important;
     -webkit-app-region: drag;
     -webkit-user-select: none;
 }
@@ -68,15 +60,78 @@ body {
 }
 
 .controles:hover, .controles:active {
-    background-color: #00000050;
+    background-color: #000000;
     text-decoration: none;
 }
 
-.container-fluid {
-    position: absolute;
-    top: 20px;
-    bottom: 0px;
-    overflow-y: scroll;
+.icon {
+    height: 20px;
+    width: 40px;
+    padding: 2px;
+    stroke: #ced4da;
+    stroke-width: 1px;
+    fill: #ced4da;
+}
+
+.circle-left{
+    border-radius: 5px 0px 0px 5px;
+}
+
+.icon:hover, .icon:active {
+    fill: white;
+    stroke: white;
+    padding: 2px;
+}
+
+#chartContent{
+    max-height: 70vh; 
+    height: 50vw; 
+    width: 100%;
+}
+
+.bg-dark{
+    background-color: var(--dark3)!important;
+}
+
+select{
+    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23ffffff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px !important;
+    border: none!important;
+    outline: none !important;
+    color: #CCCCCC!important;
+}
+
+select:focus, select:active{
+    box-shadow: none !important;
+    outline: none !important;
+    border: 1px solid var(--dark4) !important;
+}
+
+/* bottom-right border-radius */
+table tr:last-child td:last-child {
+    border-bottom-right-radius: .25rem;
+  }
+
+.table{
+    background-color: var(--dark3)!important;
+    border-radius: .25rem!important;
+}
+
+.table, .table td, .table th{
+    border: none!important;
+}
+
+.red{
+    background-color: var(--red);
+}
+
+.dark{
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.yellow{
+    background-color: rgba(227,214,34,.7);
+}
+.blue{
+    background-color: rgba(40,189,229,.7);
 }
 
 a {
@@ -94,15 +149,4 @@ canvas {
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
-}
-
-select {
-    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23ffffff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px !important;
-}
-
-select:focus {
-    border-color: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-    border: 1px solid white !important;
 }
