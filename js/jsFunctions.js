@@ -171,10 +171,10 @@ function llenarfechas() {
       alert(err)
     } else {
       var a = csvObject(data);
-      maxdate = a[a.length - 4].Fecha;
+      maxdate = a[a.length - 4].fecha;
       for (let i = a.length - 1; i > 0; i--) {
-        if (a[i]["CCAA Codigo ISO"] == "RI") {
-          document.getElementById("fechas").innerHTML += "<option value=\"" + a[i].Fecha + "\">" + a[i].Fecha + "</option>;"
+        if (a[i].ccaa == "RI") {
+          document.getElementById("fechas").innerHTML += "<option value=\"" + a[i].fecha + "\">" + a[i].fecha + "</option>;"
         }
       }
       leerJSON();
@@ -188,10 +188,10 @@ function csvObject(csv) {
   var headers = lines[0].split(",");
 
   //correccion
-  headers[0] = "CCAA Codigo ISO";
+  headers[0] = "ccaa";
   for (let i = 1; i < headers.length; i++) {
     if (i > 0) {
-      headers[i] = headers[i].trim();
+      headers[i] = headers[i].trim().toLowerCase();
     }
   }
 
@@ -214,6 +214,7 @@ function csvObject(csv) {
       result.push(obj);
     }
   }
+  console.log(result)
   return result; //JavaScript object
 
 }
@@ -235,70 +236,70 @@ function leerJSON() {
       var activos = { cantidad: [], suma: 0, diarios: [] }
 
       //fill table head
-      head = "<tr><td class='font-weight-bold'>Provincias</td><td class='font-weight-bold'>Fechas</td><td class='font-weight-bold dark'>Casos</td><td class='font-weight-bold red'>Activos</td><td class='font-weight-bold'>Hospitalizados</td><td class='font-weight-bold'>UCI</td><td class='font-weight-bold yellow'>Fallecidos</td><td class='font-weight-bold blue'>Recuperados</td></tr>";
+      head = "<tr><td class='font-weight-bold'>CCAA</td><td class='font-weight-bold'>Fechas</td><td class='font-weight-bold dark'>Casos</td><td class='font-weight-bold red'>Activos</td><td class='font-weight-bold'>Hospitalizados</td><td class='font-weight-bold'>UCI</td><td class='font-weight-bold yellow'>Fallecidos</td><td class='font-weight-bold blue'>Recuperados</td></tr>";
 
       //fill table body
       var body = "";
       for (let i = 0; i < a.length; i++) {
-        a[i]["CCAA Codigo ISO"] = renombrar(a[i]["CCAA Codigo ISO"]);
+        a[i].ccaa = renombrar(a[i].ccaa);
         if (tipografico == "total") {
-          if (a[i].Fecha == maxdate) {
-            if (opcion == a[i]["CCAA Codigo ISO"]) {
-              var q = a[i].Casos - a[i].Fallecidos - a[i].Recuperados;
-              body += "<tr><td>" + a[i]["CCAA Codigo ISO"] + "</td><td>" + a[i].Fecha + "</td><td class='dark'>" + a[i].Casos + "</td><td class='red'>" + q + "</td><td>" + a[i].Hospitalizados + "</td><td>" + a[i].UCI + "</td><td class='yellow'>" + a[i].Fallecidos + "</td><td class='blue'>" + a[i].Recuperados + "</td></tr>";
+          if (a[i].fecha == maxdate) {
+            if (opcion == a[i].ccaa) {
+              var q = a[i].casos - a[i].fallecidos - a[i].recuperados;
+              body += "<tr><td>" + a[i].ccaa + "</td><td>" + a[i].fecha + "</td><td class='dark'>" + a[i].casos + "</td><td class='red'>" + q + "</td><td>" + a[i].hospitalizados + "</td><td>" + a[i].uci + "</td><td class='yellow'>" + a[i].fallecidos + "</td><td class='blue'>" + a[i].recuperados + "</td></tr>";
             } else if (opcion == "todos") {
-              var q = a[i].Casos - a[i].Fallecidos - a[i].Recuperados;
-              body += "<tr><td>" + a[i]["CCAA Codigo ISO"] + "</td><td>" + a[i].Fecha + "</td><td class='dark'>" + a[i].Casos + "</td><td class='red'>" + q + "</td><td>" + a[i].Hospitalizados + "</td><td>" + a[i].UCI + "</td><td class='yellow'>" + a[i].Fallecidos + "</td><td class='blue'>" + a[i].Recuperados + "</td></tr>";
+              var q = a[i].casos - a[i].fallecidos - a[i].recuperados;
+              body += "<tr><td>" + a[i].ccaa + "</td><td>" + a[i].fecha + "</td><td class='dark'>" + a[i].casos + "</td><td class='red'>" + q + "</td><td>" + a[i].hospitalizados + "</td><td>" + a[i].uci + "</td><td class='yellow'>" + a[i].fallecidos + "</td><td class='blue'>" + a[i].recuperados + "</td></tr>";
             }
           }
         } else {
           if (opcion == "todos") {
             provincias = document.getElementById("select").options;
-            if (a[i].Fecha == maxdate && i > 18) {
-              let q1 = a[i].Casos - a[i - 19].Casos;
-              let q3 = a[i].Hospitalizados - a[i - 19].Hospitalizados;
-              let q4 = a[i].UCI - a[i - 19].UCI;
-              let q5 = a[i].Fallecidos - a[i - 19].Fallecidos;
-              let q6 = a[i].Recuperados - a[i - 19].Recuperados;
+            if (a[i].fecha == maxdate && i > 18) {
+              let q1 = a[i].casos - a[i - 19].casos;
+              let q3 = a[i].hospitalizados - a[i - 19].hospitalizados;
+              let q4 = a[i].uci - a[i - 19].uci;
+              let q5 = a[i].fallecidos - a[i - 19].fallecidos;
+              let q6 = a[i].recuperados - a[i - 19].recuperados;
               let q2 = q1 - q5 - q6;
-              body += "<tr><td>" + a[i]["CCAA Codigo ISO"] + "</td><td>" + a[i].Fecha + "</td><td class='dark'>" + q1 + "</td><td class='red'>" + q2 + "</td><td>" + q3 + "</td><td>" + q4 + "</td><td class='yellow'>" + q5 + "</td><td class='blue'>" + q6 + "</td></tr>";
+              body += "<tr><td>" + a[i].ccaa + "</td><td>" + a[i].fecha + "</td><td class='dark'>" + q1 + "</td><td class='red'>" + q2 + "</td><td>" + q3 + "</td><td>" + q4 + "</td><td class='yellow'>" + q5 + "</td><td class='blue'>" + q6 + "</td></tr>";
             }
           }
         }
-        if (opcion == a[i]["CCAA Codigo ISO"]) {
-          fecha.push(a[i].Fecha);
-          casos.cantidad.push(a[i].Casos);
-          fallecidos.cantidad.push(a[i].Fallecidos);
-          recuperados.cantidad.push(a[i].Recuperados);
-          hospitalizados.cantidad.push(a[i].Hospitalizados);
-          uci.cantidad.push(a[i].UCI);
-          activos.cantidad.push(a[i].Casos - a[i].Fallecidos - a[i].Recuperados);
+        if (opcion == a[i].ccaa) {
+          fecha.push(a[i].fecha);
+          casos.cantidad.push(a[i].casos);
+          fallecidos.cantidad.push(a[i].fallecidos);
+          recuperados.cantidad.push(a[i].recuperados);
+          hospitalizados.cantidad.push(a[i].hospitalizados);
+          uci.cantidad.push(a[i].uci);
+          activos.cantidad.push(a[i].casos - a[i].fallecidos - a[i].recuperados);
         } else if (opcion == "todos") {
 
           //Eliminar NaN
-          if (a[i].Casos > 0) {
-            casos.suma += parseInt(a[i].Casos);
+          if (a[i].casos > 0) {
+            casos.suma += parseInt(a[i].casos);
           }
-          if (a[i].Fallecidos > 0) {
-            fallecidos.suma += parseInt(a[i].Fallecidos);
+          if (a[i].fallecidos > 0) {
+            fallecidos.suma += parseInt(a[i].fallecidos);
           }
-          if (a[i].Recuperados > 0) {
-            recuperados.suma += parseInt(a[i].Recuperados);
+          if (a[i].recuperados > 0) {
+            recuperados.suma += parseInt(a[i].recuperados);
           }
-          if (a[i].Hospitalizados > 0) {
-            hospitalizados.suma += parseInt(a[i].Hospitalizados);
+          if (a[i].hospitalizados > 0) {
+            hospitalizados.suma += parseInt(a[i].hospitalizados);
           }
-          if (a[i].UCI > 0) {
-            uci.suma += parseInt(a[i].UCI);
+          if (a[i].uci > 0) {
+            uci.suma += parseInt(a[i].uci);
           }
-          if (a[i].Casos - a[i].Fallecidos - a[i].Recuperados > 0) {
-            activos.suma += parseInt(a[i].Casos - a[i].Fallecidos - a[i].Recuperados);
+          if (a[i].casos - a[i].fallecidos - a[i].recuperados > 0) {
+            activos.suma += parseInt(a[i].casos - a[i].fallecidos - a[i].recuperados);
           }
 
 
           //suma
-          if (a[i]["CCAA Codigo ISO"] == "La Rioja") {
-            fecha.push(a[i].Fecha);
+          if (a[i].ccaa == "La Rioja") {
+            fecha.push(a[i].fecha);
             casos.cantidad.push(casos.suma);
             fallecidos.cantidad.push(fallecidos.suma);
             recuperados.cantidad.push(recuperados.suma);
@@ -306,7 +307,7 @@ function leerJSON() {
             uci.cantidad.push(uci.suma);
             activos.cantidad.push(activos.suma);
 
-            if (maxdate == a[i].Fecha && casos.suma > 0 && tipografico == "total") {
+            if (maxdate == a[i].fecha && casos.suma > 0 && tipografico == "total") {
               displaytotal = "<tr style='background-color: #1B1E21;'><td colspan=\"8\"></td></tr>"
               displaytotal += "<tr><td class='font-weight-bold'>TOTAL</td><td>" + maxdate + "</td><td class='dark'>" + casos.suma + "</td><td class='red'>" + activos.suma + "</td><td>" + hospitalizados.suma + "</td><td>" + uci.suma + "</td><td class='yellow'>" + fallecidos.suma + "</td><td class='blue'>" + recuperados.suma + "</td></tr>";
             }
@@ -398,7 +399,7 @@ function renombrar(a) {
     case 'MD':
       a = "Comunidad de Madrid";
       break;
-    case 'ME':
+    case 'ML':
       a = "Melilla";
       break;
     case 'MC':
