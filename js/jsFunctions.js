@@ -1,9 +1,9 @@
-node.dirname.startsWith("C:") ? installPath = node.local + "/Programs/covid-19-esp/resources" : installPath=node.dirname+"/../";
+node.dirname.startsWith("C:") ? installPath = node.local + "/Programs/covid-19-esp/resources" : installPath = node.dirname + "/../";
 var csvPath = node.local + "/Programs/covid-19-esp/resources/serie_historica_acumulados.csv"; //escribe el nombre del archivo
 var opcion = "todos";
 var maxdate = "20/02/2020";
 var tipografico = "total";
-console.log("install directory: "+node.dirname)
+console.log("install directory: " + node.dirname)
 
 node.ipcRenderer.on("maximized", () => {
   document.getElementsByClassName("controles")[1].innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="M12,15.4l6-6L16.6,8L12,12.6L7.4,8L6,9.4L12,15.4z" /> </svg>';
@@ -67,13 +67,26 @@ node.ipcRenderer.on("download cancel", (event, item) => {
       llenarfechas();
     }
   })
-
 });
-document.addEventListener("DOMContentLoaded", function (event) {
-  document.getElementById("select").addEventListener("change", select);
-  document.getElementById("fechas").addEventListener("change", fechas);
-  document.getElementById("grafico").addEventListener("change", cambiargrafico);
-})
+
+function habilitarbotones(){
+$("#grafico a").on("click",function(e){
+  $("#graficoboton").text(this.text);
+  tipografico=this["name"]
+  leerJSON()  
+});
+$("#select a").on("click",function(e){
+  $("#selectboton").text(this.text);
+  opcion=this["text"]
+  this["name"] == "todos" ? opcion = this["name"] : opcion=this["text"]
+  leerJSON()
+});
+$("#fechas a").on("click",function(e){
+  $("#fechasboton").text(this.text);
+  maxdate = this["name"]
+  leerJSON()
+});
+}
 
 function grafico(fecha, casos, fallecidos, recuperados, activos) {
   Chart.defaults.global.defaultFontColor = '#CCCCCC';
@@ -150,33 +163,6 @@ function grafico(fecha, casos, fallecidos, recuperados, activos) {
   });
 }
 
-//select
-function select() {
-  if (this.options != undefined) {
-    opcion = this.options[this.selectedIndex].text;
-    if (this.options[this.selectedIndex].value == "todos") {
-      opcion = this.options[this.selectedIndex].value;
-    }
-  }
-  leerJSON()
-}
-
-//fechas
-function fechas() {
-  if (this.options != undefined) {
-    maxdate = this.options[this.selectedIndex].value;
-  }
-  leerJSON()
-}
-
-//grafico
-function cambiargrafico() {
-  if (this.options != undefined) {
-    tipografico = this.options[this.selectedIndex].value;
-  }
-  leerJSON()
-}
-
 function llenarfechas() {
   node.fs.readFile(csvPath, "utf-8", (err, data) => {
     if (err) {
@@ -186,9 +172,11 @@ function llenarfechas() {
       maxdate = a[a.length - 4].fecha;
       for (let i = a.length - 1; i > 0; i--) {
         if (a[i].ccaa == "RI") {
-          document.getElementById("fechas").innerHTML += "<option value=\"" + a[i].fecha + "\">" + a[i].fecha + "</option>;"
+          document.getElementById("fechas").innerHTML += "<a class=\"dropdown-item\" href=\"#\" name=\"" + a[i].fecha + "\">" + a[i].fecha + "</a>";         
         }
       }
+      habilitarbotones()
+      document.getElementById("fechasboton").innerHTML = maxdate;
       leerJSON();
     }
   })
