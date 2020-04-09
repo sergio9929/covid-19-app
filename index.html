@@ -34,14 +34,14 @@
   <div class="container-fluid">
     <div class="row justify-content-center">
       <div class="col-xl-10">
-        <h2 class="text-center font-weight-normal pt-1">Casos de COVID-19</h2>
+        <h2 id="titulo" class="text-center font-weight-normal pt-1">Casos de COVID-19</h2>
         <div id="chartContent" class="mb-3">
           <canvas id="myChart"></canvas>
         </div>
         <form action="">
           <div class="row">
             <div class="col form-group pr-0">
-              <select class="form-control custom-select bg-dark" name="" id="select">
+              <select class="form-control custom-select bg-dark border-0" name="" id="select">
                 <option selected value="todos">Todas las provincias</option>
                 <option value="AN">Andalucía</option>
                 <option value="AR">Aragón</option>
@@ -65,18 +65,18 @@
               </select>
             </div>
             <div class="col form-group">
-              <select class="form-control custom-select bg-dark" name="" id="fechas"></select>
+              <select class="form-control custom-select bg-dark border-0" name="" id="fechas"></select>
             </div>
           </div>
           <div class="form-group">
-            <select class="form-control custom-select bg-dark" name="" id="grafico">
+            <select class="form-control custom-select bg-dark border-0" name="" id="grafico">
               <option value="total">Casos totales</option>
               <option value="diario">Casos diarios</option>
             </select>
           </div>
         </form>
         <div class="table-responsive rounded">
-            <table id="table" class="table table-dark w-100 mb-3 rounded"></table>
+          <table id="table" class="table table-dark w-100 mb-3 rounded"></table>
         </div>
       </div>
     </div>

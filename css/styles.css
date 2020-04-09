@@ -33,6 +33,15 @@
     background: var(--dark);
 }
 
+div.sticky {
+    position: sticky;
+    top: 0;
+    background-color: yellow;
+    padding: 50px;
+    font-size: 20px;
+    display: block;
+}
+
 body {
     overflow-y: hidden;
 }
@@ -95,15 +104,11 @@ body {
 
 select{
     background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23ffffff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px !important;
-    border: none!important;
-    outline: none !important;
     color: #CCCCCC!important;
 }
 
 select:focus, select:active{
-    box-shadow: none !important;
-    outline: none !important;
-    border: 1px solid var(--dark4) !important;
+    box-shadow: 0px 0px 0px 1px var(--dark4)!important;
 }
 
 /* bottom-right border-radius */

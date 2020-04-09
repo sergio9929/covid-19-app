@@ -1,12 +1,24 @@
-var csvPath = node.dirname + "/../serie_historica_acumulados.csv"; //escribe el nombre del archivo
+node.dirname.startsWith("C:") ? installPath = node.local + "/Programs/covid-19-esp/resources" : installPath=node.dirname+"/../";
+var csvPath = node.local + "/Programs/covid-19-esp/resources/serie_historica_acumulados.csv"; //escribe el nombre del archivo
 var opcion = "todos";
 var maxdate = "20/02/2020";
 var tipografico = "total";
+console.log("install directory: "+node.dirname)
+
+node.ipcRenderer.on("maximized", () => {
+  document.getElementsByClassName("controles")[1].innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="M12,15.4l6-6L16.6,8L12,12.6L7.4,8L6,9.4L12,15.4z" /> </svg>';
+});
+
+node.ipcRenderer.on("unmaximized", () => {
+  document.getElementsByClassName("controles")[1].innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path class="cls-1" d="M12,8,6,14l1.41,1.41L12,10.83l4.59,4.58L18,14Z" /></svg>';
+
+});
+
 if (navigator.onLine) {
   node.ipcRenderer.send("download", {
     url: "https://covid19.isciii.es/resources/serie_historica_acumulados.csv",
     properties: {
-      directory: node.dirname + "/../",
+      directory: installPath,
       filename: "serie_historica_acumulados.csv",
       errorTitle: "Error de descarga",
       errorMessage: "No se ha podido actualizar"
@@ -214,7 +226,6 @@ function csvObject(csv) {
       result.push(obj);
     }
   }
-  console.log(result)
   return result; //JavaScript object
 
 }

@@ -11,6 +11,7 @@ function createWindow() {
         minWidth: 470,
         minHeight: 425,
         frame: false,
+        role: 'toggledevtools',
         webPreferences: {
             nodeIntegration: false,
             preload: __dirname + "/preload.js"
@@ -21,6 +22,14 @@ function createWindow() {
     win.on("closed", () => { win = null })
     // win.webContents.openDevTools()
 
+    //navbar
+    win.on("maximize", () => {
+        win.webContents.send("maximized")
+    })
+    win.on("unmaximize", () => {
+        win.webContents.send("unmaximized")
+    })
+
     //download
     ipcMain.on("download", async (event, info) => {
         var stop = false;
@@ -30,7 +39,7 @@ function createWindow() {
         download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
             .then(dl => { win.webContents.send("download complete", dl.getSavePath(), stop = true) })
             .catch(() => { win.webContents.send("download error"), stop = true });
-        console.log("parar descarga: "+stop);
+        console.log("parar descarga: " + stop);
         function cancelar(item) {
             if (stop == false) {
                 console.log("va a cancelar");
@@ -40,8 +49,8 @@ function createWindow() {
         }
     })
 }
+
 app.on("ready", () => {
     autoUpdater.checkForUpdatesAndNotify()
     createWindow()
-
 })

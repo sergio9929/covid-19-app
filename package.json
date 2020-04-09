@@ -16,7 +16,7 @@
   "scripts": {
     "start": "electron main.js",
     "dist": "electron-builder --win",
-    "publish": "electron-builder -p always",
+    "publish": "electron-builder -p always --x64 --ia32",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "build": {
@@ -35,17 +35,21 @@
         "nsis",
         "portable"
       ],
-      "icon": "resources/icon.png"
+      "icon": "resources/icon.png",
+      "artifactName": "${name}_${version}_Setup.exe"
     },
     "directories": {
       "output": "../COVID-19 CSV-app-nstaladores/build"
     },
     "portable": {
-      "artifactName": "covid19_portable.exe"
+      "artifactName": "${name}_${version}_portable.exe"
     },
     "nsis": {
       "allowToChangeInstallationDirectory": true,
-      "oneClick": false
+      "oneClick": false,
+      "perMachine": true,
+      "deleteAppDataOnUninstall": true,
+      "uninstallDisplayName": "${name}_${version}_Uninstall.exe"
     },
     "icon": "resources/icon.png"
   }
