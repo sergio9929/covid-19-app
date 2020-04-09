@@ -33,7 +33,6 @@
       ],
       "target": [
         "nsis-web",
-        "nsis",
         "portable"
       ],
       "icon": "resources/icon.png",

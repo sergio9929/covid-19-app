@@ -90,6 +90,18 @@ body {
     -webkit-user-select: none;
 }
 
+.controles {
+    width: 40px;
+    height: 100%;
+    text-align: center;
+    line-height: 0px;
+}
+
+.controles:hover, .controles:active {
+    background-color: #000000;
+    text-decoration: none;
+}
+
 .icon {
     height: 20px;
     width: 40px;
