@@ -20,6 +20,10 @@ window.onload = function () {
     })
     document.getElementsByClassName("controles")[2].addEventListener("click", () => { remote.getCurrentWindow().close() })
     document.getElementById("fuente").addEventListener("click", () => { node.shell.openExternal("https://www.mscbs.gob.es/en/profesionales/saludPublica/ccayes/alertasActual/nCov-China/situacionActual.htm") })
-    let username = process.env.username || process.env.user;
-console.log(process.env)
+    
+    document.addEventListener('auxclick', (event) => event.preventDefault())
+    document.addEventListener('dragover', (event) => event.preventDefault())
+    document.addEventListener('drop', (event) => event.preventDefault())
+
+    console.log(process.env)
 }

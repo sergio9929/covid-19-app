@@ -29,6 +29,10 @@ function createWindow() {
     win.on("unmaximize", () => {
         win.webContents.send("unmaximized")
     })
+    
+    win.webContents.on('new-window', function (event, url) {
+        event.preventDefault();
+    });
 
     //download
     ipcMain.on("download", async (event, info) => {
@@ -48,6 +52,7 @@ function createWindow() {
             }
         }
     })
+
 }
 
 app.on("ready", () => {
