@@ -1,6 +1,6 @@
 {
   "name": "covid-19-esp",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "main.js",
   "author": "Sergio Rodriguez",
   "license": "ISC",
@@ -32,8 +32,7 @@
         }
       ],
       "target": [
-        "nsis-web",
-        "portable"
+        "nsis-web"
       ],
       "icon": "resources/icon.png",
       "artifactName": "${name}_${version}_Setup.exe"

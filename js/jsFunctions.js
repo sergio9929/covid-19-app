@@ -14,6 +14,7 @@ node.ipcRenderer.on("unmaximized", () => {
 
 });
 
+//descargar informacion
 if (navigator.onLine) {
   node.ipcRenderer.send("download", {
     url: "https://covid19.isciii.es/resources/serie_historica_acumulados.csv",
@@ -34,13 +35,11 @@ if (navigator.onLine) {
     }
   })
 }
-
 node.ipcRenderer.on("download complete", (event, file) => {
   csvPath = file; // Full file path
   console.log("listo")
   llenarfechas();
 });
-
 node.ipcRenderer.on("download error", (event) => {
   console.log("hola")
   node.fs.access(csvPath, (err) => {
@@ -69,23 +68,47 @@ node.ipcRenderer.on("download cancel", (event, item) => {
   })
 });
 
-function habilitarbotones(){
-$("#grafico a").on("click",function(e){
-  $("#graficoboton").text(this.text);
-  tipografico=this["name"]
-  leerJSON()  
+//descargar actualizacion
+node.ipcRenderer.on('update available', (event, info) => {
+  console.log("update available")
+  node.ipcRenderer.removeAllListeners('update available');
+  document.getElementsByClassName('alert')[0].classList.add("show");
+  document.getElementById('mensaje').innerText = 'Hay una nueva versión disponible: v' + info.version;
 });
-$("#select a").on("click",function(e){
-  $("#selectboton").text(this.text);
-  opcion=this["text"]
-  this["name"] == "todos" ? opcion = this["name"] : opcion=this["text"]
-  leerJSON()
+node.ipcRenderer.on('update downloaded', (event, info) => {
+  console.log("update downloaded")
+  node.ipcRenderer.removeAllListeners('update downloaded');
+  document.getElementById('mensaje').innerText = 'La v' + info.version + ' se ha descargado correctamente';
+  document.getElementById('descargando-actualizacion').classList.add('d-none');
+  document.getElementById('instalar-actualizacion').classList.remove('d-none');
 });
-$("#fechas a").on("click",function(e){
-  $("#fechasboton").text(this.text);
-  maxdate = this["name"]
-  leerJSON()
-});
+document.getElementById('instalar-actualizacion').addEventListener("click", () => {
+  node.ipcRenderer.send('download_install');
+})
+document.getElementById('descargar-actualizacion').addEventListener("click", () => {
+  node.ipcRenderer.send('download_start');
+  document.getElementById('mensaje').innerText = 'descargando';
+  document.getElementById('descargar-actualizacion').classList.add('d-none');
+  document.getElementById('descargando-actualizacion').classList.remove('d-none');
+})
+
+function habilitarbotones() {
+  $("#grafico a").on("click", function (e) {
+    $("#graficoboton").text(this.text);
+    tipografico = this["name"]
+    leerJSON()
+  });
+  $("#select a").on("click", function (e) {
+    $("#selectboton").text(this.text);
+    opcion = this["text"]
+    this["name"] == "todos" ? opcion = this["name"] : opcion = this["text"]
+    leerJSON()
+  });
+  $("#fechas a").on("click", function (e) {
+    $("#fechasboton").text(this.text);
+    maxdate = this["name"]
+    leerJSON()
+  });
 }
 
 function grafico(fecha, casos, fallecidos, recuperados, activos) {
@@ -172,7 +195,7 @@ function llenarfechas() {
       maxdate = a[a.length - 4].fecha;
       for (let i = a.length - 1; i > 0; i--) {
         if (a[i].ccaa == "RI") {
-          document.getElementById("fechas").innerHTML += "<a class=\"dropdown-item\" href=\"#\" name=\"" + a[i].fecha + "\">" + a[i].fecha + "</a>";         
+          document.getElementById("fechas").innerHTML += "<a class=\"dropdown-item\" href=\"#\" name=\"" + a[i].fecha + "\">" + a[i].fecha + "</a>";
         }
       }
       habilitarbotones()

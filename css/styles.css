@@ -8,6 +8,14 @@
     --yellow: #E5DA55;
 }
 
+.fixed-bottom-right{
+    position: fixed;
+    width: 18rem; 
+    right: 1.5rem;
+    bottom: 0px;
+    z-index: 1030;
+}
+
 *{
     color: #CCCCCC;
 }
