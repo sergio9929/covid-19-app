@@ -71,7 +71,7 @@ autoUpdater.on('update-available', (info) => {
     notification = new Notification({
         icon: __dirname + "/resources/icon.png",
         title: "Nueva actualización disponible",
-        body: "Se ha detectado una nueva versión, v" + info.version
+        body: "Se ha detectado una nueva versión: " + info.version
     })
     notification.show()
     win.webContents.send('update available', info);
@@ -81,7 +81,7 @@ autoUpdater.on('update-downloaded', (info) => {
     notification = new Notification({
         icon: __dirname + "/resources/icon.png",
         title: "Nueva actualización disponible",
-        body: "La versión " + info.version + " se ha descargado con éxito, reinicia la aplicación para aplicar los cambios."
+        body: "La versión " + info.version + " se ha descargado con éxito, haz click en instalar dentro de la aplicación."
     })
     notification.show()
     win.webContents.send('update downloaded', info);

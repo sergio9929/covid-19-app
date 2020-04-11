@@ -73,12 +73,12 @@ node.ipcRenderer.on('update available', (event, info) => {
   console.log("update available")
   node.ipcRenderer.removeAllListeners('update available');
   document.getElementsByClassName('alert')[0].classList.add("show");
-  document.getElementById('mensaje').innerText = 'Hay una nueva versión disponible: v' + info.version;
+  document.getElementById('mensaje').innerText = 'Hay una nueva versión disponible: ' + info.version;
 });
 node.ipcRenderer.on('update downloaded', (event, info) => {
   console.log("update downloaded")
   node.ipcRenderer.removeAllListeners('update downloaded');
-  document.getElementById('mensaje').innerText = 'La v' + info.version + ' se ha descargado correctamente';
+  document.getElementById('mensaje').innerText = 'La versión' + info.version + ' se ha descargado correctamente';
   document.getElementById('descargando-actualizacion').classList.add('d-none');
   document.getElementById('instalar-actualizacion').classList.remove('d-none');
 });
@@ -87,7 +87,6 @@ document.getElementById('instalar-actualizacion').addEventListener("click", () =
 })
 document.getElementById('descargar-actualizacion').addEventListener("click", () => {
   node.ipcRenderer.send('download_start');
-  document.getElementById('mensaje').innerText = 'descargando';
   document.getElementById('descargar-actualizacion').classList.add('d-none');
   document.getElementById('descargando-actualizacion').classList.remove('d-none');
 })
