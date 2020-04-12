@@ -78,7 +78,7 @@ node.ipcRenderer.on('update available', (event, info) => {
 node.ipcRenderer.on('update downloaded', (event, info) => {
   console.log("update downloaded")
   node.ipcRenderer.removeAllListeners('update downloaded');
-  document.getElementById('mensaje').innerText = 'La versión' + info.version + ' se ha descargado correctamente';
+  document.getElementById('mensaje').innerText = 'La versión ' + info.version + ' se ha descargado correctamente';
   document.getElementById('descargando-actualizacion').classList.add('d-none');
   document.getElementById('instalar-actualizacion').classList.remove('d-none');
 });
@@ -191,7 +191,7 @@ function llenarfechas() {
       alert(err)
     } else {
       var a = csvObject(data);
-      maxdate = a[a.length - 4].fecha;
+      maxdate = a[a.length-8].fecha;
       for (let i = a.length - 1; i > 0; i--) {
         if (a[i].ccaa == "RI") {
           document.getElementById("fechas").innerHTML += "<a class=\"dropdown-item\" href=\"#\" name=\"" + a[i].fecha + "\">" + a[i].fecha + "</a>";
@@ -223,7 +223,7 @@ function csvObject(csv) {
     for (let j = 0; j < 7; j++) {
 
       //correccion
-      if (currentline[j].startsWith("NOTA:")) {
+      if (currentline[j]==undefined || currentline[j].startsWith("NOTA:")) {
         i = lines.length - 1;
         j = headers.length;
         var eliminar = true;
@@ -236,8 +236,8 @@ function csvObject(csv) {
       result.push(obj);
     }
   }
-  return result; //JavaScript object
 
+  return result; //JavaScript object
 }
 
 //esta diseñado para convertir cualquier json en una tabla

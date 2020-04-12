@@ -24,7 +24,7 @@ function createWindow() {
     win.setMenu(null)
     win.loadURL("file://" + __dirname + "/index.html")
     win.on("closed", () => { win = null })
-    // win.webContents.openDevTools()
+    win.webContents.openDevTools()
 
     //navbar
     win.on("maximize", () => {
