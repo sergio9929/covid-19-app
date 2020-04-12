@@ -191,7 +191,7 @@ function llenarfechas() {
       alert(err)
     } else {
       var a = csvObject(data);
-      maxdate = a[a.length-8].fecha;
+      maxdate = a[a.length - 8].fecha;
       for (let i = a.length - 1; i > 0; i--) {
         if (a[i].ccaa == "RI") {
           document.getElementById("fechas").innerHTML += "<a class=\"dropdown-item\" href=\"#\" name=\"" + a[i].fecha + "\">" + a[i].fecha + "</a>";
@@ -220,23 +220,17 @@ function csvObject(csv) {
   for (let i = 1; i < lines.length; i++) {
     var obj = {};
     var currentline = lines[i].split(",");
-    for (let j = 0; j < 7; j++) {
 
-      //correccion
-      if (currentline[j]==undefined || currentline[j].startsWith("NOTA:")) {
-        i = lines.length - 1;
-        j = headers.length;
-        var eliminar = true;
-      } else {
+    //correccion
+    if (currentline[0].startsWith("NOTA:")) {
+      i = lines.length - 1;
+    } else {
+      for (let j = 0; j < 7; j++) {
         obj[headers[j]] = currentline[j];
       }
-    }
-
-    if (eliminar != true) {
       result.push(obj);
     }
   }
-
   return result; //JavaScript object
 }
 
