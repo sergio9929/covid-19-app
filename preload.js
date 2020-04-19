@@ -4,7 +4,6 @@ node.userpath = process.env.USERPROFILE;
 node.local= process.env.LOCALAPPDATA;
 node.programfiles=process.env.ProgramFiles;
 node.temp=process.env.TEMP;
-node.fs = require("fs");
 node.ipcRenderer = require("electron").ipcRenderer;
 window.remote = require("electron").remote;
 node.shell = require('electron').shell;

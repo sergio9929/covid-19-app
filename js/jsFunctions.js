@@ -186,11 +186,12 @@ function grafico(fecha, casos, fallecidos, recuperados, activos) {
 }
 
 function llenarfechas() {
-  node.fs.readFile(csvPath, "utf-8", (err, data) => {
-    if (err) {
-      alert(err)
-    } else {
-      var a = csvObject(data);
+  var rawFile = new XMLHttpRequest();
+  rawFile.open("GET", csvPath, false);
+  rawFile.overrideMimeType("text/html; charset=latin1");
+  rawFile.onreadystatechange = () => {
+    if (rawFile.readyState === 4 && rawFile.status === 200 || rawFile.status == 0) {
+      var a = csvObject(rawFile.responseText);
       maxdate = a[a.length - 8].fecha;
       for (let i = a.length - 1; i > 0; i--) {
         if (a[i].ccaa == "RI") {
@@ -201,7 +202,8 @@ function llenarfechas() {
       document.getElementById("fechasboton").innerHTML = maxdate;
       leerJSON();
     }
-  })
+  }
+  rawFile.send(null);
 }
 
 function csvObject(csv) {
@@ -239,11 +241,12 @@ function csvObject(csv) {
 
 //esta diseñado para convertir cualquier json en una tabla
 function leerJSON() {
-  node.fs.readFile(csvPath, "latin1", (err, data) => {
-    if (err) {
-      alert(err)
-    } else {
-      var a = csvObject(data);
+  var rawFile = new XMLHttpRequest();
+  rawFile.open("GET", csvPath, false);
+  rawFile.overrideMimeType("text/html; charset=latin1");
+  rawFile.onreadystatechange = () => {
+    if (rawFile.readyState === 4 && rawFile.status === 200 || rawFile.status == 0) {
+      var a = csvObject(rawFile.responseText);
       var displaytotal = "";
       var fecha = []
       var casos = { cantidad: [], suma: 0, diarios: [] }
@@ -365,8 +368,8 @@ function leerJSON() {
         uci.cantidad = uci.diarios;
         activos.cantidad = activos.diarios;
       }
-      
-      var notas="<p class='font-weight-bold mt-4'>Notas del Gobierno:</p>";
+
+      var notas = "<p class='font-weight-bold mt-4'>Notas del Gobierno:</p>";
       for (let i = a.length - 15; i < a.length; i++) {
         if (Object.keys(a[i]).length == 1) {
           notas += "<p>" + a[i].ccaa + "</p>";
@@ -379,8 +382,10 @@ function leerJSON() {
       document.getElementById("notas").innerHTML = notas;
       grafico(fecha, casos.cantidad, fallecidos.cantidad, recuperados.cantidad, activos.cantidad);
     }
-  })
+  }
+  rawFile.send(null);
 }
+
 function renombrar(a) {
   switch (a) {
     case 'AN':
