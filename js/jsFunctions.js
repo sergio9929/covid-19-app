@@ -239,7 +239,7 @@ function csvObject(csv) {
 
 //esta diseñado para convertir cualquier json en una tabla
 function leerJSON() {
-  node.fs.readFile(csvPath, "utf-8", (err, data) => {
+  node.fs.readFile(csvPath, "latin1", (err, data) => {
     if (err) {
       alert(err)
     } else {
@@ -376,7 +376,7 @@ function leerJSON() {
       //display
       document.getElementById("chartContent").innerHTML = "<canvas id=\"myChart\"></canvas>";
       document.getElementById("table").innerHTML = head + body + displaytotal;
-      document.getElementById("notas").innerHTML += notas;
+      document.getElementById("notas").innerHTML = notas;
       grafico(fecha, casos.cantidad, fallecidos.cantidad, recuperados.cantidad, activos.cantidad);
     }
   })
