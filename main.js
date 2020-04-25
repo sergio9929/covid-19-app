@@ -10,8 +10,8 @@ autoUpdater.autoInstallOnAppQuit = false;
 function createWindow() {
     win = new BrowserWindow({
         backgroundColor: "#343a40",
-        width: 850,
-        height: 630,
+        width: 980,
+        height: 650,
         minWidth: 470,
         minHeight: 425,
         frame: false,
