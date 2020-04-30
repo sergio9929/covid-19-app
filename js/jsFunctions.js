@@ -73,7 +73,8 @@ node.ipcRenderer.on('update available', (event, info) => {
   console.log("update available")
   node.ipcRenderer.removeAllListeners('update available');
   document.getElementsByClassName('alert')[0].classList.add("show");
-  document.getElementById('mensaje').innerText = 'Hay una nueva versión disponible: ' + info.version;
+  document.getElementById('mensaje').innerHTML = 'Hay una nueva versión disponible: ' + info.version;
+  document.getElementById('mensajenotas').innerHTML = 'NOTAS: ' + info.releaseNotes.replace("<p>", "").replace("</p>", "");
 });
 node.ipcRenderer.on('update downloaded', (event, info) => {
   console.log("update downloaded")

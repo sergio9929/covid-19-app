@@ -71,7 +71,7 @@ autoUpdater.on('update-available', (info) => {
     notification = new Notification({
         icon: __dirname + "/resources/icon.png",
         title: "Nueva actualización disponible",
-        body: "Se ha detectado una nueva versión: " + info.version
+        body: "Se ha detectado una nueva versión: " + info.version + "\n" + "NOTAS: " + info.releaseNotes.replace("<p>", "").replace("</p>", "")
     })
     notification.show()
     win.webContents.send('update available', info);
